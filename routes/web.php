@@ -17,9 +17,11 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
+$router->group(['prefix' => 'auth'], function () use ($router) {
+    $router->post('/register',  'AuthController@register');
+    $router->post('/login',     'AuthController@login');
+});
 
-$router->group(['prefix' => 'user'], function () use ($router) {
-    $router->get('/',           'UserController@index');
-    $router->post('/register',  'UserController@register');
-    $router->post('/login',     'UserController@login');
+$router->group(['prefix' => 'user', 'middleware' => 'auth'], function () use ($router) {
+    $router->post('/',          'UserController@index');
 });
